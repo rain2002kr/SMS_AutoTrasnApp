@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">문자 자동 전송앱</string>
+
+    <!-- TODO: information flagment -->
+    <string name="info">정보 </string>
+    <!-- TODO: sub_contact_register_view -->
+    <string name="sub_contact_register_btinsert">추가 </string>
+
+
+
+</resources>

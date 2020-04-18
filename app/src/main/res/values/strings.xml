@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">SMS AutoTransfer App</string>
+
+    <!-- TODO: information flagment -->
+    <string name="info">infomation </string>
+
+    <!-- TODO: sub_contact_register_view -->
+    <string name="sub_contact_register_btinsert">insert </string>
+
+
+</resources>
