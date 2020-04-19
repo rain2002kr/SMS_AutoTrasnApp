@@ -1,6 +1,7 @@
 package com.example.sms_autotransappfrag.SmS_Send
 
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,11 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.sms_autotrasnapp.App
-import com.example.sms_autotrasnapp.Dcontact
-import com.example.sms_autotrasnapp.R
-import com.example.sms_autotrasnapp.SMS_Adapter
+import com.example.sms_autotrasnapp.*
 
 import kotlinx.android.synthetic.main.fragment_send_sms.*
 import kotlinx.android.synthetic.main.sub_send_sms.*
@@ -40,32 +37,40 @@ class SendSmSFragment : Fragment() {
         val inflater = LayoutInflater.from(context)
         inflater.inflate(R.layout.sub_send_sms,send_sms_view,true)
         //loadSMS()
+        txtSetReceName.setText(G.transName)
+        txtSetReceNumber.setText(G.transNumber)
+        edSMS.setText(G.message)
 
-        //연락처 등록
-        btAdd.setOnClickListener({
-
-        })
-
-        //마지막 문자 확인
-        btCheck.setOnClickListener({
+        //임시 기능
+        btTemp.setOnClickListener{
+            txtSetReceNumber.setText("010-4697-3907")
+            txtSetReceName.setText("이경훈")
+            edSMS.setText("테스트메시지")
+        }
+        //공유
+        btShare.setOnClickListener({
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/plain"
+            intent.putExtra(Intent.EXTRA_SUBJECT, "${G.receiveName}: ${G.receiveNumber} 문자내역")
+            intent.putExtra(Intent.EXTRA_TEXT, G.message)
+            startActivity(intent)
 
         })
         //확인한 문자 로드
         btLoad.setOnClickListener({
-
+            (activity as MainActivity).changeFragment(G.Companion.Scr.LOG_FRAG.number)
         })
         //문자 전송
         btSend.setOnClickListener({
-
+            val number  = txtSetReceNumber.text.toString()
+            val message = edSMS.text.toString()
+            (activity as MainActivity).sendSMS(number , message)
         })
 
 
 
     }
 
-    private fun println(data:String){
-        txtlogSMS.setText("${data}\n")
-    }
 
     private fun loadSMS(){
         val contactGet = App.prefs.getDcontact()

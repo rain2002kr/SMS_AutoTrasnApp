@@ -1,13 +1,17 @@
 package com.example.sms_autotrasnapp
 
+import android.app.Application
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
+import com.example.sms_autotrasnapp.ContactRegister_Item.Contact
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.sub_main_view.view.*
 import kotlinx.android.synthetic.main.sub_resend_log_view.view.*
+import kotlin.coroutines.coroutineContext
 
 //<!-- MainViewModel -->
 class MainViewModel (val imageId : Int, val subject:String, val subject2:String )
@@ -93,6 +97,15 @@ class SMS_Adapter (val context: Context, val intId:Int, val list:List<Dcontact>)
 class G {
 
     companion object {
+        const val EXTRA_BROD_NUMBER = "EXTRA_BROD_NUMBER"
+        const val EXTRA_BROD_CONTENTS = "EXTRA_BROD_CONTENTS"
+        const val EXTRA_BROD_RECEIVED_DATE = "EXTRA_BROD_RECEIVED_DATE"
+        var message = ""
+        var receiveName = ""
+        var receiveNumber = ""
+        var transName = ""
+        var transNumber = ""
+
         enum class Scr(val number:Int){
             REGIST_FRAG(1),
             LOG_FRAG(2),
@@ -100,5 +113,7 @@ class G {
             INFO_FRAG(4),
             MAIN_FRAG(99)
         }
+
+
     }
 }
