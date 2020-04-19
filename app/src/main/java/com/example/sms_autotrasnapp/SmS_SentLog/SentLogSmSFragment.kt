@@ -81,9 +81,12 @@ class SentLogSmSFragment : Fragment() {
         del_item_bt.setOnClickListener({
             val contactLog  = contactLogViewModel.getAll().value.orEmpty().last()
             val contactLogs  = contactLogViewModel.getAll().value
+            Log.d(TAG,"${contactLog.id.toString()} contacts size ${contactLogs?.size.toString()}")
+            Log.d(TAG,"${contactLog.id.toString()} contact index ${contactLogs?.lastIndex}")
 
             if(contactLogs?.lastIndex!! > 0 ) {
                 contactLogViewModel.delete(contactLog)
+                Log.d(TAG,"${contactLog.id.toString()} contacts After size ${contactLogs?.size.toString()}")
             }
         })
         //TODO update Contact Register
