@@ -31,22 +31,21 @@ class SentLogSmSFragment : Fragment() {
     lateinit var viewModleFactory: ViewModelProvider.AndroidViewModelFactory
     private lateinit var contactLogViewModel : ContactLogViewModel
     private var id: Long? = null
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
 
-    }
-
-    fun viewModelCreate(){
-        val adapter = ContactLogAdapter({ contactLog ->
-            id = contactLog.id
-            loadSmSMessage(contactLog)
-        },
-            { contactLog -> deleteDialog(contactLog)})
+    private fun viewModelCreate(){
+        val adapter = (activity as MainActivity).contactLogAdapter
+        adapter.clickOnEventListner = object :ContactLogAdapter.ClickOnEventListner{
+            override fun onTouchEventListner(contactLog: ContactLog) {
+               loadContactLog(contactLog)
+            }
+        }
 
         val lm = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL,false)
-        contact_log_list.adapter = adapter
-        contact_log_list.layoutManager = lm
-        contact_log_list.setHasFixedSize(true)
+        contact_log_list.let{
+            it.adapter = adapter
+            it.layoutManager = lm
+            it.setHasFixedSize(true)
+        }
 
         viewModleFactory = ViewModelProvider.AndroidViewModelFactory.getInstance(activity!!.application)
         contactLogViewModel = ViewModelProvider(this, viewModleFactory).get(ContactLogViewModel::class.java)
@@ -55,7 +54,9 @@ class SentLogSmSFragment : Fragment() {
         })
 
     }
-    private fun loadSmSMessage(contactLog: ContactLog) {
+
+
+    private fun loadContactLog(contactLog: ContactLog) {
         G.message = contactLog.message.toString()
         G.receiveName = contactLog.receiveName
         G.receiveNumber = contactLog.receiveNumber
@@ -64,21 +65,12 @@ class SentLogSmSFragment : Fragment() {
         (activity as MainActivity).changeFragment(G.Companion.Scr.SEND_FRAG.number)
     }
 
-    private fun deleteDialog(contactLog: ContactLog) {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setMessage("Delete selected contact?")
-            .setNegativeButton("NO") { _, _ -> }
-            .setPositiveButton("YES") { _, _ ->
-                contactLogViewModel.delete(contactLog)
-            }
-        builder.show()
-    }
 
     fun itemInsertAndDelete(){
         //TODO insert Contact Register
 
         //TODO delete Contact Register
-        del_item_bt.setOnClickListener({
+        del_item_bt.setOnClickListener{
             val contactLog  = contactLogViewModel.getAll().value.orEmpty().last()
             val contactLogs  = contactLogViewModel.getAll().value
             Log.d(TAG,"${contactLog.id.toString()} contacts size ${contactLogs?.size.toString()}")
@@ -88,7 +80,7 @@ class SentLogSmSFragment : Fragment() {
                 contactLogViewModel.delete(contactLog)
                 Log.d(TAG,"${contactLog.id.toString()} contacts After size ${contactLogs?.size.toString()}")
             }
-        })
+        }
         //TODO update Contact Register
 
     }

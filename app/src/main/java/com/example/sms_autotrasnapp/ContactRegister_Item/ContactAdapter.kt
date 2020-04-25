@@ -14,6 +14,11 @@ class ContactAdapter(val contactItemClick: (Contact) -> Unit, val contactItemLon
 
     private var contacts: List<Contact> = listOf()
 
+    interface ClickOnEventListner {
+        fun onTouchEventListner(contact: Contact)
+    }
+    lateinit var clickOnEventListner : ClickOnEventListner
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.sub_contact_list_view, parent, false)
         return ViewHolder(view)
@@ -50,6 +55,7 @@ class ContactAdapter(val contactItemClick: (Contact) -> Unit, val contactItemLon
 
             itemView.setOnClickListener {
                 contactItemClick(contact)
+                clickOnEventListner.onTouchEventListner(contact)
             }
 
             itemView.setOnLongClickListener {

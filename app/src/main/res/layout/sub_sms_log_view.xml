@@ -25,7 +25,7 @@
             >
 
             <TextView
-                android:id="@+id/txtlogReceName"
+                android:id="@+id/txtSmsReceiveName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="삼성카드"
@@ -33,14 +33,14 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/txtlogReceTime"
+                android:id="@+id/txtSmsReceiveTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Thu Jan 16 18:53"
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/txtlogReceNumber"
+                android:id="@+id/txtSmsReceiveNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="1588-4697"
@@ -55,7 +55,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/txtlogMessage"
+                android:id="@+id/txtSmsMessage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="문자 메시지"
@@ -67,35 +67,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/txtlogTransName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="최지선"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/txtlogTransTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Thu Jan 16 18:53"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/txtlogTransNumber"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="010-5687-4135"
-                android:textSize="12sp" />
-
-        </LinearLayout>
     </LinearLayout>
 
 

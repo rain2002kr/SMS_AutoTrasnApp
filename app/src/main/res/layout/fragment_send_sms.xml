@@ -9,18 +9,6 @@
     <FrameLayout
         android:id="@+id/send_sms_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_resent_log"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/darker_gray"
-        android:padding="1dp"
-        android:scrollbars="vertical"
-        tools:listitem="@layout/sub_resend_log_view"
-
-        />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

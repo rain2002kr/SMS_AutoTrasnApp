@@ -26,6 +26,9 @@ import com.example.sms_autotrasnapp.ContactRegister_Item.Contact
 import com.example.sms_autotrasnapp.ContactRegister_Item.ContactAdapter
 import com.example.sms_autotrasnapp.ContactRegister_Item.ContactRegistFragment
 import com.example.sms_autotrasnapp.ContactRegister_Item.ContactViewModel
+import com.example.sms_autotrasnapp.SmS_Send.Sms
+import com.example.sms_autotrasnapp.SmS_Send.SmsAdapter
+import com.example.sms_autotrasnapp.SmS_Send.SmsViewModel
 import com.example.sms_autotrasnapp.SmS_SentLog.ContactLog
 import com.example.sms_autotrasnapp.SmS_SentLog.ContactLogAdapter
 import com.example.sms_autotrasnapp.SmS_SentLog.ContactLogViewModel
@@ -49,10 +52,14 @@ class MainActivity : AppCompatActivity() {
         //Manifest.permission.ACCESS_COARSE_LOCATION,
     )
     lateinit var viewModleFactory: ViewModelProvider.AndroidViewModelFactory
-    private lateinit var contactViewModel : ContactViewModel
-    private lateinit var contactLogViewModel : ContactLogViewModel
+    lateinit var contactViewModel : ContactViewModel
+    lateinit var contactLogViewModel : ContactLogViewModel
+    lateinit var smsViewModel : SmsViewModel
     private var id: Long? = null
 
+    lateinit var contactAdapter : ContactAdapter
+    lateinit var contactLogAdapter : ContactLogAdapter
+    lateinit var smsAdapter : SmsAdapter
 
 
     //menuScreen
@@ -107,9 +114,8 @@ class MainActivity : AppCompatActivity() {
 
     //TODO viewModelCreate()
     fun viewModelCreate(){
-        // TODO ContactView model
-        // Set contactItemClick & contactItemLongClick lambda
-        val adapter = ContactAdapter({ contact ->
+        // TODO ContactView model and ContactAdapter
+        contactAdapter = ContactAdapter({ contact ->
             id = contact.id
 
         }, { contact ->
@@ -120,12 +126,12 @@ class MainActivity : AppCompatActivity() {
         viewModleFactory = ViewModelProvider.AndroidViewModelFactory.getInstance(application)
         contactViewModel = ViewModelProvider(this, viewModleFactory).get(ContactViewModel::class.java)
         contactViewModel.getAll().observe(this, Observer<List<Contact>>{contacts ->
-            adapter.setContacts(contacts!!)
+            contactAdapter.setContacts(contacts!!)
         })
 
-        // TODO ContactLogView model
+        // TODO ContactLogView model and contactLogAdapter
         // Set contactItemClick & contactItemLongClick lambda
-        val adapterLog = ContactLogAdapter({ contactLog ->
+        contactLogAdapter = ContactLogAdapter({ contactLog ->
             id = contactLog.id
         }, { contactLog ->
             deleteLogDialog(contactLog)
@@ -133,14 +139,29 @@ class MainActivity : AppCompatActivity() {
 
         contactLogViewModel = ViewModelProvider(this, viewModleFactory).get(ContactLogViewModel::class.java)
         contactLogViewModel.getAll().observe(this, Observer<List<ContactLog>>{ contactsLog ->
-            adapterLog.setContacts(contactsLog!!)
+            contactLogAdapter.setContacts(contactsLog!!)
         })
 
+        // TODO smsViewModel and smsAdapter
+        smsAdapter=SmsAdapter({sms->
+            id = sms.id
+
+        }, { sms ->
+            deleteSmSDialog(sms)
+        })
+
+        smsViewModel=ViewModelProvider(this,viewModleFactory).get(SmsViewModel::class.java)
+        smsViewModel.getAll().observe(this,Observer<List<Sms>>{ smss->
+            smsAdapter.setSmss(smss!!)
+        })
+
+        // TODO Nomal code
         contactLog(intent, "onCreateIntent" )
+
 
     }
     //Dialog for adpter
-    private fun deleteDialog(contact: Contact) {
+    fun deleteDialog(contact: Contact) {
         val builder = AlertDialog.Builder(this)
         builder.setMessage("Delete selected contactLog?")
             .setNegativeButton("NO") { _, _ -> }
@@ -157,6 +178,17 @@ class MainActivity : AppCompatActivity() {
             .setNegativeButton("NO") { _, _ -> }
             .setPositiveButton("YES") { _, _ ->
                 contactLogViewModel.delete(contactLog)
+            }
+        builder.show()
+    }
+
+    //Dialog for adpter3 for SMS
+    private fun deleteSmSDialog(sms:Sms) {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("Delete selected contactLog?")
+            .setNegativeButton("NO") { _, _ -> }
+            .setPositiveButton("YES") { _, _ ->
+                smsViewModel.delete(sms)
             }
         builder.show()
     }
@@ -258,6 +290,7 @@ class MainActivity : AppCompatActivity() {
 
         )
         val contacts  : List<Contact> ?= contactViewModel.getAll().value
+
         contacts?.forEach { contact -> Unit
             Log.d( TAG, "inside contacts"    )
             val receiveNumber = contact.receiveNumber.replace("-", "")
@@ -286,8 +319,10 @@ class MainActivity : AppCompatActivity() {
                 )
 
                 sendSMS(transNumber,message)
-
                 contactLogViewModel.insert(contactlog)
+
+               // val sms = Sms(id, receiveNumber,receiveName,message,receiveTime,false)
+               // smsViewModel.insert(sms)
 
                 Log.d(
                     TAG, "[inside ${intentType}: ] receiveName: ${receiveName}" +

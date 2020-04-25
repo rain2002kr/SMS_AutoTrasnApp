@@ -5,12 +5,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.sms_autotrasnapp.ContactRegister_Item.Contact
 import com.example.sms_autotrasnapp.R
 
 class ContactLogAdapter(val contactItemClick: (ContactLog) -> Unit, val contactItemLongClick: (ContactLog) -> Unit)
     : RecyclerView.Adapter<ContactLogAdapter.ViewHolder>() {
 
     private var contactsLog: List<ContactLog> = listOf()
+    interface ClickOnEventListner {
+        fun onTouchEventListner(contactLog: ContactLog)
+    }
+    lateinit var clickOnEventListner : ClickOnEventListner
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.sub_contact_log_view, parent, false)
@@ -48,6 +53,7 @@ class ContactLogAdapter(val contactItemClick: (ContactLog) -> Unit, val contactI
 
             itemView.setOnClickListener {
                 contactItemClick(contactLog)
+                clickOnEventListner.onTouchEventListner(contactLog)
             }
 
             itemView.setOnLongClickListener {

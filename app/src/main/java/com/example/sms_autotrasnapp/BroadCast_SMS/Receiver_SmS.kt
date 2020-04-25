@@ -10,6 +10,7 @@ import android.util.Log
 import android.widget.Toast
 import com.example.sms_autotrasnapp.G
 import com.example.sms_autotrasnapp.MainActivity
+import com.example.sms_autotrasnapp.lifecycle.App
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -30,6 +31,13 @@ class Receiver_SmS : BroadcastReceiver() {
             Log.d(this.javaClass.name, "contents: $contents")
             Log.d(this.javaClass.name, "received date: $receivedDate")
             Toast.makeText(context,"broad send Sms $sender : $contents", Toast.LENGTH_LONG).show()
+
+            //temp save the data of sender,contents and time.
+
+            App.prefs.setV("sender",sender)
+            App.prefs.setV("contents",contents)
+            App.prefs.setV("receivedDate",receivedDate.toString())
+
             sendToActivity(context,sender.toString(),contents.toString(),receivedDate.toString())
         }
     }
