@@ -32,6 +32,7 @@ import com.example.sms_autotrasnapp.SmS_Send.SmsViewModel
 import com.example.sms_autotrasnapp.SmS_SentLog.ContactLog
 import com.example.sms_autotrasnapp.SmS_SentLog.ContactLogAdapter
 import com.example.sms_autotrasnapp.SmS_SentLog.ContactLogViewModel
+import com.example.sms_autotrasnapp.lifecycle.App.Companion.prefs
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_contact_regist.*
 import java.lang.Exception
@@ -157,6 +158,8 @@ class MainActivity : AppCompatActivity() {
 
         // TODO Nomal code
         contactLog(intent, "onCreateIntent" )
+
+
 
 
     }
@@ -290,8 +293,16 @@ class MainActivity : AppCompatActivity() {
 
         )
         val contacts  : List<Contact> ?= contactViewModel.getAll().value
+        // TODO save contactlist in sharedPref
+        var num = 0
 
         contacts?.forEach { contact -> Unit
+            num++
+            prefs.setContact("contactlist${num.toString()}",contact)
+            prefs.setV("contactMaxNum",num.toString())
+            Log.d(TAG,num.toString())
+            Log.d(TAG,"contactlist${num.toString()}")
+
             Log.d( TAG, "inside contacts"    )
             val receiveNumber = contact.receiveNumber.replace("-", "")
             Log.d(

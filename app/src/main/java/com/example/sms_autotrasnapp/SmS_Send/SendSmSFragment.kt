@@ -13,10 +13,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sms_autotrasnapp.*
+import com.example.sms_autotrasnapp.ContactRegister_Item.Contact
 import com.example.sms_autotrasnapp.SmS_Send.Sms
 import com.example.sms_autotrasnapp.SmS_Send.SmsAdapter
 import com.example.sms_autotrasnapp.SmS_Send.SmsViewModel
 import com.example.sms_autotrasnapp.lifecycle.App
+import com.example.sms_autotrasnapp.lifecycle.App.Companion.prefs
 import kotlinx.android.synthetic.main.fragment_send_sms.*
 import kotlinx.android.synthetic.main.sub_send_sms.*
 
@@ -34,7 +36,6 @@ class SendSmSFragment : Fragment() {
         val smsAdapter = (activity as MainActivity).smsAdapter
         smsAdapter.clickOnEventListner = object :SmsAdapter.ClickOnEventListner{
             override fun onTouchEventListner(message: String) {
-                txtlogSMS.setText(message)
                 edSMS.setText(message)
             }
         }
@@ -44,7 +45,6 @@ class SendSmSFragment : Fragment() {
             it.layoutManager = lm
             it.setHasFixedSize(true)
         }
-
         viewModleFactory = ViewModelProvider.AndroidViewModelFactory.getInstance(activity!!.application)
         smsViewModel=ViewModelProvider(this,viewModleFactory).get(SmsViewModel::class.java)
         smsViewModel.getAll().observe(requireActivity(),Observer<List<Sms>>{smss->
@@ -54,7 +54,7 @@ class SendSmSFragment : Fragment() {
     }
 
     fun viewModelCreate2(){
-    
+
     }
 
     //TODO saveGetSmsMessage 메시지 추가
@@ -66,26 +66,69 @@ class SendSmSFragment : Fragment() {
         val receivedDate = App.prefs.getV("receivedDate")
         val saveLastMessage = App.prefs.getV("saveLastMessage")
 
-        if(saveLastMessage != contents.toString()){
+        if(saveLastMessage != receivedDate.toString()){
             val sms = Sms(id, sender.toString(),"",contents.toString(),receivedDate.toString(),true)
             smsViewModel.insert(sms)
-            App.prefs.setV("saveLastMessage", contents.toString())
+            prefs.setV("saveLastMessage", receivedDate.toString())
 
         } else {
-            //Toast.makeText(requireContext(),"메시지가 같습니다.",Toast.LENGTH_LONG).show()
-            Log.d(TAG, "message 같음 : ${contents.toString()}")
+            Log.d(TAG, "message 같음 : ${receivedDate.toString()}")
         }
+
+
+        var num = prefs.getV("contactMaxNum")
+        val testlist = mutableListOf<String>()
+        val contactlist = mutableListOf<String>()
+
+        for(i in 1..num!!.toInt()){
+            val contact = prefs.getV("contactlist${i.toString()}")
+            Log.d(TAG, i.toString())
+            Log.d(TAG,"0 : ${contact!!.toString()}")
+            contact.split(" ").filter{
+                testlist.add(it)
+                it.length > 2
+            }
+            for(i in contactlist.size-1 downTo 0){
+                contactlist.removeAt(i)
+            }
+            testlist.forEach {
+                 contactlist.add(replaceFiltered(it))
+            }
+        }
+
+        contactlist.forEach {
+            Log.d(TAG,"tellist ${it}")
+        }
+
+    }
+    fun replaceFiltered(value:String):String{
+        return value.replace(",","")
+            .replace("[","")
+            .replace("]","")
+            .replace(" ","")
+
+    }
+    fun replaceBefore(name:String):String{
+        return name.replaceAfter(",","")
+            .replace("[","")
+            .replace(",","")
+    }
+    fun replaceAfter(number:String):String{
+        return number.replaceBefore(",","")
+            .replace(",","")
+            .replace("]","")
+            .replace(" ","")
     }
 
     fun itemInsertAndDelete() {
         //TODO SMS 삭제
-        btDelLogSms.setOnClickListener{
+        imageView3.setOnClickListener{
             val sms = smsViewModel.getAll().value
             sms?.forEach {
                 smsViewModel.delete(it)
             }
-
         }
+
         //TODO 임시기능
         btTemp.setOnClickListener{
             Log.d(TAG, "임시 버튼 눌림.")
@@ -99,7 +142,6 @@ class SendSmSFragment : Fragment() {
         bt_selectNumber.setOnClickListener{
             edSetReceNumber.setText("010-5687-4135")
             edSetReceName.setText("와이프")
-            edSMS.setText(txtlogSMS.text.toString())
         }
         //TODO 공유
         btShare.setOnClickListener{
@@ -118,7 +160,10 @@ class SendSmSFragment : Fragment() {
         btSend.setOnClickListener{
             val number  = edSetReceNumber.text.toString()
             val message = edSMS.text.toString()
-            (activity as MainActivity).sendSMS(number , message)
+
+            if(number.count() > 1  && message.count() > 1  ) {
+                (activity as MainActivity).sendSMS(number, message)
+            }
         }
 
 

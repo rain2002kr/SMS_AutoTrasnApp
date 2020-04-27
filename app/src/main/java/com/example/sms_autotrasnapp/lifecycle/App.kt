@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
+import com.example.sms_autotrasnapp.ContactRegister_Item.Contact
 
 class MySharedPreferences(context: Context) {
 
@@ -18,6 +19,13 @@ class MySharedPreferences(context: Context) {
         prefs.edit().putString(key,value).apply()
 
     }
+    fun setContact(key:String, value: Contact){
+        val list = mutableListOf<String>()
+        list.add(value.receiveName)
+        list.add(value.receiveNumber)
+        prefs.edit().putString(key,list.toString()).apply()
+    }
+
     fun getV(key:String):String?{
         return prefs.getString(key,"")
     }
