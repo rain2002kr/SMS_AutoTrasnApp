@@ -14,21 +14,34 @@ class MySharedPreferences(context: Context) {
     val prefs: SharedPreferences = context.getSharedPreferences(PREFS_FILENAME, 0)
 
     /* 파일 이름과 EditText 를 저장할 Key 값을 만들고 prefs 인스턴스 초기화 */
-
-    fun setV(key:String, value:String?){
-        prefs.edit().putString(key,value).apply()
-
-    }
     fun setContact(key:String, value: Contact){
         val list = mutableListOf<String>()
         list.add(value.receiveName)
         list.add(value.receiveNumber)
         prefs.edit().putString(key,list.toString()).apply()
     }
-
+    fun setV(key:String, value:String?){
+        prefs.edit().putString(key,value).apply()
+    }
     fun getV(key:String):String?{
         return prefs.getString(key,"")
     }
+
+    fun setIndex(key:String, value:Int){
+        prefs.edit().putInt(key,value).apply()
+    }
+
+    fun getIndex(key: String):Int{
+        return prefs.getInt(key,0)
+    }
+
+    fun deleteAt(key: String){
+        prefs.edit().remove("key").apply()
+    }
+    fun deleteAll(){
+        prefs.edit().clear().apply()
+    }
+
 
     var myEditText: String?
         get() = prefs.getString(PREF_KEY_MY_EDITTEXT, "")

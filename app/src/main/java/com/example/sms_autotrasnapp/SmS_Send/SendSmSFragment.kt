@@ -101,6 +101,20 @@ class SendSmSFragment : Fragment() {
         }
 
     }
+
+    fun saveRawSmsMessage(){
+        // save raw sms
+        var index =App.prefs.getIndex("index")
+        var listGs = listOf<String>()
+        for(i in 0..index){
+            var message =prefs.getV("raw${i.toString()}")
+            Log.d(TAG,"index :${index} i: ${i} : ${message}")
+
+
+        }
+    }
+
+
     fun replaceFiltered(value:String):String{
         return value.replace(",","")
             .replace("[","")
@@ -132,6 +146,8 @@ class SendSmSFragment : Fragment() {
         //TODO 임시기능
         btTemp.setOnClickListener{
             Log.d(TAG, "임시 버튼 눌림.")
+
+            prefs.deleteAll()
 
             edSetReceNumber.setText("010-4697-3907")
             edSetReceName.setText("이경훈")
@@ -187,6 +203,7 @@ class SendSmSFragment : Fragment() {
         viewModelCreate()
         saveGetSmsMessage()
         itemInsertAndDelete()
+     //   saveRawSmsMessage()
 
     }
 

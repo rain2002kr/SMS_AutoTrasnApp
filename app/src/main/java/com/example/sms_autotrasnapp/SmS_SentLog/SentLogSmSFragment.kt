@@ -84,20 +84,14 @@ class SentLogSmSFragment : Fragment() {
         //TODO update Contact Register
 
     }
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_sent_log_sm, container, false)
-        return view
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
+        return  inflater.inflate(R.layout.fragment_sent_log_sm, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModelCreate()
         itemInsertAndDelete()
-
-
     }
 
 

@@ -38,6 +38,12 @@ class Receiver_SmS : BroadcastReceiver() {
             App.prefs.setV("contents",contents)
             App.prefs.setV("receivedDate",receivedDate.toString())
 
+            // save raw sms
+            var index =App.prefs.getIndex("index")
+            index++
+            App.prefs.setV("raw${index.toString()}",sender+"#"+contents+"#"+receivedDate.toString())
+            App.prefs.setIndex("index",index)
+
             sendToActivity(context,sender.toString(),contents.toString(),receivedDate.toString())
         }
     }
