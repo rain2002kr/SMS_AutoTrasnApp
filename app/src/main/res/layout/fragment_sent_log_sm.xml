@@ -39,7 +39,7 @@
             android:text="보낸문자" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/bt_scr_rawSms"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

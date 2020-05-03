@@ -12,6 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sms_autotrasnapp.MainActivity
 import com.example.sms_autotrasnapp.R
+import com.example.sms_autotrasnapp.lifecycle.App
+import com.example.sms_autotrasnapp.lifecycle.App.Companion.prefs
 import kotlinx.android.synthetic.main.fragment_contact_regist.*
 import kotlinx.android.synthetic.main.sub_contact_register_view.*
 
@@ -122,7 +124,22 @@ class ContactRegistFragment : Fragment() {
 
     }
 
+    override fun onPause() {
+        super.onPause()
+        // save contact data
+        val contacts  = contactViewModel.getAll().value
+        prefs.contactlist = contacts as MutableList<Contact>
+        prefs.contactlist.forEach {
+            Log.d(TAG,it.receiveName)
+        }
+        val key = "RegistContactList"
+        prefs.setContactList(key)
 
+        val list = prefs.getContactList(key)
+        list.forEach {
+            Log.d(TAG,it.receiveName + it.receiveNumber)
+        }
+        Log.d(TAG,"onPause 실행")
 
-
+    }
 }

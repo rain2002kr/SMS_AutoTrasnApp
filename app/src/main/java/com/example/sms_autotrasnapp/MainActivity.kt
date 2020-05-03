@@ -32,6 +32,7 @@ import com.example.sms_autotrasnapp.SmS_Send.SmsViewModel
 import com.example.sms_autotrasnapp.SmS_SentLog.ContactLog
 import com.example.sms_autotrasnapp.SmS_SentLog.ContactLogAdapter
 import com.example.sms_autotrasnapp.SmS_SentLog.ContactLogViewModel
+import com.example.sms_autotrasnapp.lifecycle.App
 import com.example.sms_autotrasnapp.lifecycle.App.Companion.prefs
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_contact_regist.*
@@ -162,6 +163,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
+
     }
     //Dialog for adpter
     fun deleteDialog(contact: Contact) {
@@ -277,7 +279,15 @@ class MainActivity : AppCompatActivity() {
         SmsManager.sendTextMessage(smsNumber, null, smsText, sentIntent, deliveredIntent)
 
     }
-
+    fun callContactRegistedListFromPreference():MutableList<Contact>{
+        Log.d(TAG,"연락처 불러오기")
+        val key = "RegistContactList"
+        val listTest = prefs.getContactList(key)
+        listTest.forEach {
+            Log.d(TAG,it.receiveName +it.receiveNumber)
+        }
+        return listTest
+    }
     // get SmS function
     private fun contactLog(getintent : Intent, intentType :String) {
 
@@ -286,20 +296,98 @@ class MainActivity : AppCompatActivity() {
         val receivedDate = getintent.getStringExtra(G.EXTRA_BROD_RECEIVED_DATE)
 
 
-        Log.d(TAG,"${intentType}"
-                + " sender : ${receivesender}"
-                + " contents : ${contents}"
-                + " receivedDate : ${receivedDate}"
+        Log.d(
+            TAG, "${intentType}"
+                    + " sender : ${receivesender}"
+                    + " contents : ${contents}"
+                    + " receivedDate : ${receivedDate}"
 
         )
-        val contacts  : List<Contact> ?= contactViewModel.getAll().value
-        // TODO save contactlist in sharedPref
-        var num = 0
+        val contacts: List<Contact>? = contactViewModel.getAll().value
+        val smsLists = smsViewModel.getAll().value
 
+        val key = "RegistContactList"
+        val contactRegistedListFromPreference = prefs.getContactList(key)
+        // TODO save contactlist in sharedPref
+
+        contactRegistedListFromPreference.forEach { contact -> Unit
+            Log.d(TAG,"prefContacts 실행")
+
+            val receiveNumber = contact.receiveNumber.replace("-", "")
+
+            if (receiveNumber == receivesender) {
+                val receiveName = contact.receiveName
+                val receiveTime = receivedDate
+                val receiveNumber = contact.receiveNumber
+                val message = contents
+                val transNumber = contact.transNumber
+                val transName = contact.transName
+                val transTime =  SimpleDateFormat("yy년 MM월 dd일 E요일 HH:mm:ss").format(Date(System.currentTimeMillis()))
+
+                var contactlog = ContactLog(
+                    id,
+                    receiveName,
+                    receiveTime,
+                    receiveNumber,
+                    message,
+                    transName,
+                    transTime,
+                    transNumber
+                )
+
+                sendSMS(transNumber,message)
+                contactLogViewModel.insert(contactlog)
+                val contactLogList = contactLogViewModel.getAll().value
+                prefs.contactLogList = contactLogList as MutableList<ContactLog>
+                prefs.setContactLogList("contactlog")
+                val testlog =prefs.getContactLogList("contactlog")
+
+                // sms 메시지 저장.
+                var sms = Sms(id, receiveNumber,receiveName,message,receiveTime,false)
+                smsViewModel.insert(sms)
+
+                Log.d(TAG,"smsViewModel 실행")
+                val smslist = smsViewModel.getAll().value as MutableList<Sms>
+                prefs.smsLogList = smslist
+                prefs.setSmsLogList("smsLog")
+
+                val testlist =prefs.getSmsList("smsLog")
+                testlist.forEach {
+                    Log.d(TAG,"smsViewModel 실행"+ it.toString())
+                }
+
+
+            }
+            /*
+            else
+            {
+                if(!receivesender.isNullOrEmpty()) {
+                    var sms = Sms(
+                        id,
+                        receivesender.toString(),
+                        "저장내역없음",
+                        contents.toString(),
+                        receivedDate.toString(),
+                        false
+                    )
+                    smsViewModel.insert(sms)
+                    prefs.smsLogList = smsViewModel.getAll().value as MutableList<Sms>
+                    prefs.setSmsLogList("smsLog")
+                }
+            }
+
+             */
+
+        }
+    }
+
+/*
+        var num = 0
         contacts?.forEach { contact -> Unit
             num++
             prefs.setContact("contactlist${num.toString()}",contact)
             prefs.setV("contactMaxNum",num.toString())
+
             Log.d(TAG,num.toString())
             Log.d(TAG,"contactlist${num.toString()}")
 
@@ -354,7 +442,8 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-    }
+
+ */
 
 
     //프래그먼트 .addToBackStack(null)

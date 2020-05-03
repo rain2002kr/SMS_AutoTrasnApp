@@ -66,6 +66,15 @@ class SendSmSFragment : Fragment() {
         val receivedDate = App.prefs.getV("receivedDate")
         val saveLastMessage = App.prefs.getV("saveLastMessage")
 
+        val smsLoglist = prefs.getSmsList("smsLog")
+        smsViewModel.deleteAll()
+        smsLoglist.forEach {
+            smsViewModel.insert(it)
+            Log.d(TAG,it.receiveName+it.receiveMessage)
+        }
+
+
+/*
         if(saveLastMessage != receivedDate.toString()){
             val sms = Sms(id, sender.toString(),"",contents.toString(),receivedDate.toString(),true)
             smsViewModel.insert(sms)
@@ -100,6 +109,8 @@ class SendSmSFragment : Fragment() {
             Log.d(TAG,"tellist ${it}")
         }
 
+ */
+
     }
 
     fun saveRawSmsMessage(){
@@ -109,8 +120,6 @@ class SendSmSFragment : Fragment() {
         for(i in 0..index){
             var message =prefs.getV("raw${i.toString()}")
             Log.d(TAG,"index :${index} i: ${i} : ${message}")
-
-
         }
     }
 
@@ -147,11 +156,12 @@ class SendSmSFragment : Fragment() {
         btTemp.setOnClickListener{
             Log.d(TAG, "임시 버튼 눌림.")
 
-            prefs.deleteAll()
+            //prefs.deleteAll()
 
             edSetReceNumber.setText("010-4697-3907")
             edSetReceName.setText("이경훈")
             edSMS.setText("테스트메시지")
+           // saveGetSmsMessage()
         }
 
         //TODO 지정번호로드
