@@ -42,6 +42,8 @@ class SendSmSFragment : Fragment() {
         val lm = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL,false)
         sms_log_listview.let{
             it.adapter = smsAdapter
+            lm.reverseLayout = true
+            lm.stackFromEnd = true
             it.layoutManager = lm
             it.setHasFixedSize(true)
         }

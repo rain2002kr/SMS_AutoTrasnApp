@@ -37,6 +37,8 @@ class SentLogSmSFragment : Fragment() {
         val lm = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL,false)
         contact_log_list.let{
             it.adapter = adapter
+            lm.stackFromEnd = true
+            lm.reverseLayout = true
             it.layoutManager = lm
             it.setHasFixedSize(true)
         }

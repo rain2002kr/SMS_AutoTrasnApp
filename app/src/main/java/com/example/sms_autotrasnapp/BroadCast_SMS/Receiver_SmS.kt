@@ -27,6 +27,7 @@ class Receiver_SmS : BroadcastReceiver() {
             val contents : String? = messages[0]?.messageBody.toString()
             val receivedDate = SimpleDateFormat("yy년 MM월 dd일 E요일 HH:mm:ss").format(Date(messages[0]!!.timestampMillis))
 
+
             Log.d(this.javaClass.name, "sender: $sender")
             Log.d(this.javaClass.name, "contents: $contents")
             Log.d(this.javaClass.name, "received date: $receivedDate")
